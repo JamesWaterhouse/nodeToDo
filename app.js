@@ -19,35 +19,19 @@ app.get('/task', async (req, res) => {
     let db = Client.db('toDo')
     let collection = db.collection('toDo')
 
-    if (req.query.done == 0) {
+    let done = parseInt(req.query.done);
 
-        let data = await collection.find({
-            Done: 0
+    let data = await collection.find({
+        Done: done
         }).toArray()
 
-        if (data.length > 0) {
-            let responseData = {
-                status: "success",
-                message: "ToDos successfully gotten!",
-                data: data
-            };
-            return res.json(responseData)
-        }
-
-    }else if (req.query.done == 1) {
-
-        let data = await collection.find({
-            Done: 1
-        }).toArray()
-
-        if (data.length > 0) {
-            let responseData = {
-                status: "success",
-                message: "ToDoness successfully gotten!",
-                data: data
-            };
-            return res.json(responseData)
-        }
+    if (data.length > 0) {
+        let responseData = {
+            status: "success",
+            message: "ToDos successfully gotten!",
+            data: data
+        };
+        return res.json(responseData)
     }
 
     let responseData = {
