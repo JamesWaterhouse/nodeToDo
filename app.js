@@ -7,7 +7,10 @@ const jsonParser = bodyParser.json()
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
 
-const Client = new MongoClient('mongodb://localhost:27017', {useNewUrlParser: true,  useUnifiedTopology: true });
+const Client = new MongoClient('mongodb://localhost:27017', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
 
 app.get('/task', async (req, res) => {
     // GetToDos
@@ -15,15 +18,25 @@ app.get('/task', async (req, res) => {
     await Client.connect()
     let db = Client.db('toDo')
     let collection = db.collection('toDo')
-   
-    let data = await collection.find({Done: 0}).toArray()
 
-    if(data.length > 0) {
-        let responseData = {status: "success", message: "ToDos successfully gotten!", data: data};
+    let data = await collection.find({
+        Done: 0
+    }).toArray()
+
+    if (data.length > 0) {
+        let responseData = {
+            status: "success",
+            message: "ToDos successfully gotten!",
+            data: data
+        };
         return res.json(responseData)
     }
 
-    let responseData = {status: "failure", message: "error getting data from database", data: data};
+    let responseData = {
+        status: "failure",
+        message: "error getting data from database",
+        data: data
+    };
     return res.json(responseData)
 })
 
@@ -35,14 +48,28 @@ app.put('/toDone/:id', jsonParser, async (req, res) => {
     let collection = db.collection('toDo')
 
     let id = req.params.id
-    
-    let data = await collection.updateOne({_id: ObjectId(id)}, {$set: {Done: 1}})
-    if(data.modifiedCount == 1) {
-        let responseData = {status: "success", message: "ToDo successfully todone!", data: data};
-        return res.json(responseData)
+
+    let data = await collection.updateOne({
+        _id: ObjectId(id)
+    }, {
+        $set: {
+            Done: 1
         }
-    
-    let responseData = {status: "failure", message: "error getting data from database", data: data};
+    })
+    if (data.modifiedCount == 1) {
+        let responseData = {
+            status: "success",
+            message: "ToDo successfully todone!",
+            data: data
+        };
+        return res.json(responseData)
+    }
+
+    let responseData = {
+        status: "failure",
+        message: "error getting data from database",
+        data: data
+    };
     return res.json(responseData)
 })
 
@@ -55,14 +82,25 @@ app.post('/addTask/:task', jsonParser, async (req, res) => {
 
     let task = req.params.task
 
-    let data = await collection.insertOne({Task: task, Done: 0})
+    let data = await collection.insertOne({
+        Task: task,
+        Done: 0
+    })
     console.log(data)
-    if(data.insertedCount == 1) {
-        let responseData = {status: "success", message: "ToDo successfully added!", data: data};
+    if (data.insertedCount == 1) {
+        let responseData = {
+            status: "success",
+            message: "ToDo successfully added!",
+            data: data
+        };
         return res.json(responseData)
-        }
-    
-    let responseData = {status: "failure", message: "error getting data from database", data: data};
+    }
+
+    let responseData = {
+        status: "failure",
+        message: "error getting data from database",
+        data: data
+    };
     return res.json(responseData)
 })
 
@@ -73,13 +111,23 @@ app.get('/done', async (req, res) => {
     let db = Client.db('toDo')
     let collection = db.collection('toDo')
 
-    let data = await collection.find({Done: 1}).toArray()
-    if(data.length > 0) {
-        let responseData = {status: "success", message: "ToDones successfully gotten!", data: data};
+    let data = await collection.find({
+        Done: 1
+    }).toArray()
+    if (data.length > 0) {
+        let responseData = {
+            status: "success",
+            message: "ToDones successfully gotten!",
+            data: data
+        };
         return res.json(responseData)
-        }
-    
-    let responseData = {status: "failure", message: "error getting data from database", data: data};
+    }
+
+    let responseData = {
+        status: "failure",
+        message: "error getting data from database",
+        data: data
+    };
     return res.json(responseData)
 })
 
