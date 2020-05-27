@@ -19,23 +19,41 @@ app.get('/task', async (req, res) => {
     let db = Client.db('toDo')
     let collection = db.collection('toDo')
 
-    let data = await collection.find({
-        Done: 0
-    }).toArray()
+    if (req.query.done == 0) {
 
-    if (data.length > 0) {
-        let responseData = {
-            status: "success",
-            message: "ToDos successfully gotten!",
-            data: data
-        };
-        return res.json(responseData)
+        let data = await collection.find({
+            Done: 0
+        }).toArray()
+
+        if (data.length > 0) {
+            let responseData = {
+                status: "success",
+                message: "ToDos successfully gotten!",
+                data: data
+            };
+            return res.json(responseData)
+        }
+
+    }else if (req.query.done == 1) {
+
+        let data = await collection.find({
+            Done: 1
+        }).toArray()
+
+        if (data.length > 0) {
+            let responseData = {
+                status: "success",
+                message: "ToDoness successfully gotten!",
+                data: data
+            };
+            return res.json(responseData)
+        }
     }
 
     let responseData = {
         status: "failure",
         message: "error getting data from database",
-        data: data
+        data: null
     };
     return res.json(responseData)
 })
@@ -60,7 +78,7 @@ app.put('/toDone/:id', jsonParser, async (req, res) => {
         let responseData = {
             status: "success",
             message: "ToDo successfully todone!",
-            data: data
+            data: {}
         };
         return res.json(responseData)
     }
@@ -99,36 +117,36 @@ app.post('/addTask/:task', jsonParser, async (req, res) => {
     let responseData = {
         status: "failure",
         message: "error getting data from database",
-        data: data
+        data: {}
     };
     return res.json(responseData)
 })
 
-app.get('/done', async (req, res) => {
-    // getToDones
+// app.get('/done', async (req, res) => {
+//     // getToDones
 
-    await Client.connect()
-    let db = Client.db('toDo')
-    let collection = db.collection('toDo')
+//     await Client.connect()
+//     let db = Client.db('toDo')
+//     let collection = db.collection('toDo')
 
-    let data = await collection.find({
-        Done: 1
-    }).toArray()
-    if (data.length > 0) {
-        let responseData = {
-            status: "success",
-            message: "ToDones successfully gotten!",
-            data: data
-        };
-        return res.json(responseData)
-    }
+//     let data = await collection.find({
+//         Done: 1
+//     }).toArray()
+//     if (data.length > 0) {
+//         let responseData = {
+//             status: "success",
+//             message: "ToDones successfully gotten!",
+//             data: data
+//         };
+//         return res.json(responseData)
+//     }
 
-    let responseData = {
-        status: "failure",
-        message: "error getting data from database",
-        data: data
-    };
-    return res.json(responseData)
-})
+//     let responseData = {
+//         status: "failure",
+//         message: "error getting data from database",
+//         data: data
+//     };
+//     return res.json(responseData)
+// })
 
 app.listen(3000);
